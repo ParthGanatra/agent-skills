@@ -1,0 +1,17 @@
+{
+  "name": "parthganatra-agent-skills",
+  "owner": {
+    "name": "Parth Ganatra",
+    "email": "ganatra.parth1995@gmail.com"
+  },
+  "metadata": {
+    "description": "Agent skills for Claude Code."
+  },
+  "plugins": [
+    {
+      "name": "youtube-summary",
+      "source": "./youtube-summary",
+      "description": "Summarize a YouTube video into a structured Obsidian note (TL;DR, takeaways, chapters), with opt-in slide extraction that embeds key slides inline."
+    }
+  ]
+}
