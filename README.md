@@ -6,9 +6,11 @@ Agent skills for Claude Code, by [@ParthGanatra](https://github.com/ParthGanatra
 
 ### [`youtube-summary`](./youtube-summary)
 
-Turn a YouTube video into a **structured note in your Obsidian vault** — not a raw
-transcript dump, but a real summary (TL;DR, key takeaways, read-more links, open
-questions), with the video's own chapters used as the section structure when it has them.
+Turn a YouTube video into a **structured note** — not a raw transcript dump, but a
+real summary (TL;DR, key takeaways, read-more links, open questions), with the
+video's own chapters used as the section structure when it has them. Works out of
+the box (writes Markdown to the current folder); point it at an **Obsidian vault**
+to save there instead.
 
 Its distinctive feature: **opt-in slide extraction.** For slide-heavy talks, it
 downloads the video, detects unique slides via crop-aware change detection,
@@ -39,9 +41,13 @@ git clone https://github.com/ParthGanatra/agent-skills
 cp -r agent-skills/youtube-summary ~/.claude/skills/
 ```
 
-## Configure (one-time, for `youtube-summary`)
+## Configure (optional, for `youtube-summary`)
 
-Tell the skill where your Obsidian vault is:
+Works out of the box: with no config, the note is written as Markdown to the
+**current directory** (slides embed as standard Markdown image links).
+
+To save into your **Obsidian vault** instead (and embed slides as `![[wikilinks]]`),
+tell the skill where the vault is:
 
 ```bash
 mkdir -p ~/.config/youtube-summary

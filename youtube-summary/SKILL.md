@@ -18,32 +18,39 @@ matter", a slide-heavy conference talk, etc.), also run the **opt-in slide flow*
 in the section below. Do **not** extract slides unless the user asks for this
 video specifically — it downloads the full video (~hundreds of MB) and is slow.
 
-## Configuration (one-time)
+## Configuration (optional)
 
-The target vault is **not** hardcoded — resolve it at runtime:
+The output location is **not** hardcoded — resolve it at runtime:
 
 ```bash
 ~/.claude/skills/youtube-summary/resolve-config.sh
 ```
 
-It prints `VAULT_NAME`, `VAULT_PATH`, `NOTES_SUBFOLDER`, and `NOTES_DIR` (the
-absolute notes folder). Use those values everywhere below — this doc writes
-`$NOTES_DIR`, `$VAULT_NAME`, etc. as placeholders for what the resolver returns.
+It always succeeds and prints a `MODE` plus a `NOTES_DIR` (the absolute folder to
+write the note into). Two modes:
 
-If the resolver exits non-zero (unconfigured), it prints setup instructions.
-Help the user create `~/.config/youtube-summary/config.sh` (template:
-`config.example.sh` next to this SKILL.md): ask for their Obsidian vault name,
-its absolute path, and the notes subfolder, then write the file and re-run the
-resolver. Env vars `OBSIDIAN_VAULT_NAME` / `OBSIDIAN_VAULT_PATH` /
-`NOTES_SUBFOLDER` override the file for one-off runs.
+- **`MODE=obsidian`** — an Obsidian vault is configured; it also prints
+  `VAULT_NAME`, `VAULT_PATH`, `NOTES_SUBFOLDER`. The note goes into the vault and
+  is opened in Obsidian; slide images embed via `![[wikilinks]]`.
+- **`MODE=plain`** — no vault configured (works out-of-the-box); the note is
+  written to `NOTES_DIR` (the current working directory). Slides embed via
+  standard Markdown image links.
+
+Use the resolver's values as placeholders below (`$NOTES_DIR`, `$VAULT_NAME`, …).
+
+**Offer Obsidian mode** if the user uses Obsidian and you're in `MODE=plain`:
+help them create `~/.config/youtube-summary/config.sh` (template:
+`config.example.sh` next to this SKILL.md) with their vault name, absolute path,
+and notes subfolder — or set env vars `OBSIDIAN_VAULT_NAME` /
+`OBSIDIAN_VAULT_PATH` / `NOTES_SUBFOLDER` for a one-off run.
 
 - Filename: `<video title>.md` (sanitize: replace `/` with `-`, strip leading/trailing whitespace, no quotes)
 
 ## Procedure
 
 ### 0. Resolve config
-Run `resolve-config.sh` (above) and note `NOTES_DIR`, `VAULT_NAME`, and
-`NOTES_SUBFOLDER` for the steps below.
+Run `resolve-config.sh` (above) and note `MODE` and `NOTES_DIR` (plus the vault
+vars in `obsidian` mode) for the steps below.
 
 ### 1. Fetch transcript + metadata
 Run the helper script next to this SKILL.md:
@@ -109,12 +116,14 @@ tags:
 - <POC ideas, things to try in our own stack>
 ```
 
-### 4. Open in Obsidian
-Use the configured vault name and notes subfolder (URL-encode the path):
-```bash
-open "obsidian://open?vault=$VAULT_NAME&file=$NOTES_SUBFOLDER/<title>.md"
-```
-Or, if the Obsidian CLI is installed and enabled, `obsidian open path="$NOTES_SUBFOLDER/<title>.md"`.
+### 4. Open / report
+- **`MODE=obsidian`** — open it in Obsidian (URL-encode the path):
+  ```bash
+  open "obsidian://open?vault=$VAULT_NAME&file=$NOTES_SUBFOLDER/<title>.md"
+  ```
+  Or, if the Obsidian CLI is installed and enabled, `obsidian open path="$NOTES_SUBFOLDER/<title>.md"`.
+- **`MODE=plain`** — don't open Obsidian. Just tell the user the path of the note
+  you wrote (`$NOTES_DIR/<title>.md`).
 
 ## Slide-aware summaries (opt-in)
 
@@ -161,15 +170,17 @@ need precise transcription.
 
 ### S4. Copy chosen slides into the vault + embed
 Copy the curated slides into a sibling folder of the note, renaming to unique,
-descriptive names (prefix with a short video slug so filenames stay unique
-vault-wide):
+descriptive names (prefix with a short video slug so filenames stay unique):
 ```
 $NOTES_DIR/<slug>-slides/<slug>-NN-description.jpg
 ```
-Embed inline at the relevant point in the note with `![[<slug>-NN-description.jpg]]`
-(Obsidian resolves by filename). Put the slide image next to its transcription —
-e.g. the diagram image followed by a short prose description, or the code-slide
-image followed by the same code in a fenced block.
+Embed inline at the relevant point in the note, using the syntax for the mode:
+- **`MODE=obsidian`**: `![[<slug>-NN-description.jpg]]` (Obsidian resolves by filename)
+- **`MODE=plain`**: `![<description>](<slug>-slides/<slug>-NN-description.jpg)` (standard Markdown relative link, so it renders in any viewer)
+
+Put the slide image next to its transcription — e.g. the diagram image followed
+by a short prose description, or the code-slide image followed by the same code
+in a fenced block.
 
 ### S5. Cleanup
 Delete the cached `video1080.mp4` (and any `slides_out`/`detect`/`probe` scratch)

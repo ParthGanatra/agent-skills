@@ -31,17 +31,17 @@ VAULT_PATH="${OBSIDIAN_VAULT_PATH:-}"
 NOTES_SUBFOLDER="${NOTES_SUBFOLDER:-Learnings/youtube}"
 
 if [[ -z "$VAULT_NAME" || -z "$VAULT_PATH" ]]; then
+  # No Obsidian vault configured — fall back to PLAIN mode: the note is written
+  # as Markdown into the current directory. Print a discoverable hint to stderr.
   cat >&2 <<EOF
-error: youtube-summary is not configured yet.
-
-Create $CONFIG (template: config.example.sh next to SKILL.md) with:
-  OBSIDIAN_VAULT_NAME="<your vault name>"
-  OBSIDIAN_VAULT_PATH="<absolute path to the vault root>"
-  NOTES_SUBFOLDER="<notes folder relative to vault root>"
-
-Or set those as environment variables for a one-off run.
+info: no Obsidian vault configured — using plain mode (Markdown saved to the
+current working directory). To save into your Obsidian vault instead, create
+$CONFIG (template: config.example.sh next to SKILL.md) with OBSIDIAN_VAULT_NAME /
+OBSIDIAN_VAULT_PATH / NOTES_SUBFOLDER, or set them as environment variables.
 EOF
-  exit 1
+  echo "MODE=plain"
+  echo "NOTES_DIR=$PWD"
+  exit 0
 fi
 
 # expand a leading ~ in the path if present
@@ -52,6 +52,7 @@ if [[ ! -d "$VAULT_PATH" ]]; then
   echo "warning: vault path does not exist: $VAULT_PATH" >&2
 fi
 
+echo "MODE=obsidian"
 echo "VAULT_NAME=$VAULT_NAME"
 echo "VAULT_PATH=$VAULT_PATH"
 echo "NOTES_SUBFOLDER=$NOTES_SUBFOLDER"
