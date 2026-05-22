@@ -1,6 +1,6 @@
 ---
 name: youtube-summary
-description: Summarize a YouTube video into a structured Obsidian note. Use when the user shares a YouTube URL and asks for a summary, takeaways, or notes — or invokes `/youtube-summary <url>`. Fetches the transcript via yt-dlp, writes the note into the user's configured Obsidian vault, and opens it in Obsidian. Optionally extracts and embeds slides on request.
+description: Summarize a YouTube video into structured notes — TL;DR, key takeaways, chapter-by-chapter breakdown, and reference links. Use when the user shares a YouTube URL (or invokes `/youtube-summary <url>`) and wants a summary, takeaways, transcript notes, or a write-up of a talk, lecture, or tutorial. Fetches the transcript and chapters via yt-dlp (with cookie auth for gated videos), then prints the note or saves it to an Obsidian vault. For slide-heavy conference talks it can optionally extract the video's slides and embed them inline — diagrams, code, and charts the speaker shows but never says.
 ---
 
 # youtube-summary
