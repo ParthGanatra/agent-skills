@@ -33,8 +33,9 @@ write the note into). Two modes:
   `VAULT_NAME`, `VAULT_PATH`, `NOTES_SUBFOLDER`. The note goes into the vault and
   is opened in Obsidian; slide images embed via `![[wikilinks]]`.
 - **`MODE=plain`** — no vault configured (works out-of-the-box); the note is
-  written to `NOTES_DIR` (the current working directory). Slides embed via
-  standard Markdown image links.
+  **printed in the reply** to the user, not saved to a file. (If slides are being
+  embedded, it's saved to `NOTES_DIR` = the current directory instead, since the
+  images need to live on disk; slides embed via standard Markdown image links.)
 
 Use the resolver's values as placeholders below (`$NOTES_DIR`, `$VAULT_NAME`, …).
 
@@ -74,7 +75,14 @@ Use the Read tool on `~/.cache/yt-summary/latest.txt` (already allowlisted — n
 **Chapters:** if the `---CHAPTERS---` section is a JSON array (not `NA`), use the chapter titles (in order) as the **section structure** for the "Key takeaways" headings — they're the author's own outline. Map transcript content into each chapter's `[start_time, end_time)` window, and (for slide videos) align slides by their timestamp too. If chapters are `NA`, fall back to inferring 3-6 topical headings yourself.
 
 ### 3. Write the note
-Create the file at `$NOTES_DIR/<title>.md` (create `$NOTES_DIR` if it doesn't exist) using this template:
+Build the note using the template below. Where it goes depends on `MODE`:
+- **`MODE=obsidian`** — write the file to `$NOTES_DIR/<title>.md` (create `$NOTES_DIR` if needed).
+- **`MODE=plain`** — **do not write a file**; print the full note directly in your
+  reply to the user (the whole Markdown document). Exception: if you're embedding
+  **slides**, the images must live on disk — so in that case write the note +
+  slides folder to `$NOTES_DIR` and tell the user the path instead of printing.
+
+Template:
 
 ```markdown
 ---
@@ -122,8 +130,8 @@ tags:
   open "obsidian://open?vault=$VAULT_NAME&file=$NOTES_SUBFOLDER/<title>.md"
   ```
   Or, if the Obsidian CLI is installed and enabled, `obsidian open path="$NOTES_SUBFOLDER/<title>.md"`.
-- **`MODE=plain`** — don't open Obsidian. Just tell the user the path of the note
-  you wrote (`$NOTES_DIR/<title>.md`).
+- **`MODE=plain`** — nothing to open; you already printed the note in your reply.
+  (Only if slides forced a file: tell the user the path you wrote to.)
 
 ## Slide-aware summaries (opt-in)
 
