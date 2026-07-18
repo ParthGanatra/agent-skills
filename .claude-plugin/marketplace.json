@@ -12,6 +12,11 @@
       "name": "youtube-summary",
       "source": "./youtube-summary",
       "description": "Summarize a YouTube video into a structured Obsidian note (TL;DR, takeaways, chapters), with opt-in slide extraction that embeds key slides inline."
+    },
+    {
+      "name": "plangate",
+      "source": "./plangate",
+      "description": "Terminal-native plan-review loop: your agent writes the plan to a file, you review it inline in vim with > Q: / > A: markers, your :w re-invokes the agent to revise — no code until every question is answered and you approve."
     }
   ]
 }
