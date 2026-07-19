@@ -12,6 +12,12 @@ plan to a file and lets you **review it inline in vim** — you answer questions
 comments right in the document, your `:w` re-invokes the agent to revise, and **no code
 gets written until every question is answered and you approve.**
 
+![PlanGate: Claude writes the plan, auto-opens it in a vim pane, and you answer the `> Q:` prompts inline.](./assets/plangate-demo.gif)
+
+*Above: `open-plan.sh` splits a vim pane, the plan loads with `> Q:` / `> A:` markers, and you answer in place.
+▶️ **[Watch the full 60-second demo](./assets/plangate-demo-60s.mp4)** — the whole loop, including `:w` re-invoking
+the agent, vim auto-reloading with its revisions, and the gate refusing to start while questions are open.*
+
 Its distinctive angle: it never leaves the terminal. The whole review happens in your
 editor — **your `:w` *is* the "reviewed" signal** (a background watcher re-invokes the
 agent), the agent nudges vim to reload its answers, and there's a **hard gate** before
