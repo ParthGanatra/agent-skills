@@ -14,9 +14,8 @@ gets written until every question is answered and you approve.**
 
 ![PlanGate: Claude writes the plan, auto-opens it in a vim pane, and you answer the `> Q:` prompts inline.](./assets/plangate-demo.gif)
 
-*Above: `open-plan.sh` splits a vim pane, the plan loads with `> Q:` / `> A:` markers, and you answer in place.
-▶️ **[Watch the full 60-second demo](./assets/plangate-demo-60s.mp4)** — the whole loop, including `:w` re-invoking
-the agent, vim auto-reloading with its revisions, and the gate refusing to start while questions are open.*
+*Above: `open-plan.sh` splits a vim pane, the plan loads with `> Q:` / `> A:` markers, and you answer in place —
+`:w` re-invokes the agent, which resolves the questions and revises the plan; no code until the gate clears.*
 
 Its distinctive angle: it never leaves the terminal. The whole review happens in your
 editor — **your `:w` *is* the "reviewed" signal** (a background watcher re-invokes the
